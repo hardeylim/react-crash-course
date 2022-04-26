@@ -8,15 +8,18 @@ function App() {
         {
             id: 1,
             name: 'Task 1',
-            text: 'Something about task 1'
+            text: 'Something about task 1',
+            reminder: true
         }, {
             id: 2,
             name: 'Task 2',
-            text: 'Something about task 2'
+            text: 'Something about task 2',
+            reminder: true
         }, {
             id: 3,
             name: 'Task 3',
             text: 'Something about task 3',
+            reminder: true
         }
     ])
 
@@ -28,10 +31,22 @@ function App() {
         ))
     }
 
+    const toggleReminder = (id) => {
+        console.log('On Toggle', id)
+        setTasks(tasks.map(
+            (task) =>
+                task.id === id ? {...task, reminder: !task.reminder} : task
+        ))
+    }
+
   return (
     <div className="container">
       <Header title={'Task Tracker'}></Header>
-      <Tasks tasks={tasks} onDelete={deleteTask}></Tasks>
+        {tasks.length > 0 ?
+            <Tasks tasks={tasks}
+                   onToggle={toggleReminder}
+                   onDelete={deleteTask}></Tasks>
+            :'No Tasks'}
     </div>
   );
 }
