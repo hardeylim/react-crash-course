@@ -62,7 +62,9 @@ function App() {
 
   return (
     <div className="container">
-      <Header title={'Task Tracker'} onToggle={onToggleAddForm}></Header>
+      <Header title={'Task Tracker'}
+              onToggle={onToggleAddForm}
+              showAdd={formVisible}></Header>
         {formVisible && <AddTask onAdd={addTask}></AddTask>}
         {tasks.length > 0 ?
             <Tasks tasks={tasks}
