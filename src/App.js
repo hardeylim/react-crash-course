@@ -1,46 +1,64 @@
 import './App.css';
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AddTask from "./components/AddTask";
 
 function App() {
     const [formVisible, setFormVisible] = useState(false)
     const [tasks, setTasks] = useState([
-        {
-            id: 1,
-            name: 'Task 1',
-            description: 'Something about task 1',
-            reminder: true
-        }, {
-            id: 2,
-            name: 'Task 2',
-            description: 'Something about task 2',
-            reminder: true
-        }, {
-            id: 3,
-            name: 'Task 3',
-            description: 'Something about task 3',
-            reminder: true
-        }
+        
     ])
 
-    const addTask = (task) => {
+    useEffect(() => {
+        const getTasks = async () => {
+            const tasksFromServer = await fetchTasks()
+            setTasks(tasksFromServer)
+        }
+
+        getTasks()
+
+    }, []);
+    
+
+    const fetchTasks = async () => {
+        const res = await fetch('http://localhost:5000/tasks')
+        const data = await res.json()
+
+        console.log(data)
+
+        return data
+    }
+
+    const addTask = async (task) => {
         console.log('On Add', task)
         // const keys = tasks.map((task) => task.id)
         // const sortedKeys = keys.sort((a, b) => a - b)
         // const maxKey = sortedKeys[sortedKeys.length-1]
 
-        const maxKey = tasks.map((task) => task.id)
-                            .sort((a, b) => a - b)[tasks.length-1]
+        // const maxKey = tasks.map((task) => task.id)
+        //                     .sort((a, b) => a - b)[tasks.length-1]
+        //
+        // const newTask = {id: maxKey+1, ...task,}
+        //
+        // setTasks([...tasks, newTask])
 
-        const newTask = {id: maxKey+1, ...task,}
+        const res = await fetch('http://localhost:5000/tasks',
+            {method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(task)
+            })
 
-        setTasks([...tasks, newTask])
+        setTasks([...tasks, await res.json()])
+
     }
 
-    const deleteTask = (id) => {
+    const deleteTask = async (id) => {
         console.log('On Delete', id)
+        await fetch(`http://localhost:5000/tasks/${id}`,
+            {method: 'DELETE'})
         setTasks(tasks.filter(
             (task) =>
                 task.id !== id
