@@ -5,6 +5,7 @@ import {useState} from "react";
 import AddTask from "./components/AddTask";
 
 function App() {
+    const [formVisible, setFormVisible] = useState(false)
     const [tasks, setTasks] = useState([
         {
             id: 1,
@@ -46,6 +47,11 @@ function App() {
         ))
     }
 
+    const onToggleAddForm = () => {
+        console.log('On Toggle Form')
+        setFormVisible(!formVisible)
+    }
+
     const toggleReminder = (id) => {
         console.log('On Toggle', id)
         setTasks(tasks.map(
@@ -56,8 +62,8 @@ function App() {
 
   return (
     <div className="container">
-      <Header title={'Task Tracker'}></Header>
-      <AddTask onAdd={addTask}></AddTask>
+      <Header title={'Task Tracker'} onToggle={onToggleAddForm}></Header>
+        {formVisible && <AddTask onAdd={addTask}></AddTask>}
         {tasks.length > 0 ?
             <Tasks tasks={tasks}
                    onToggle={toggleReminder}
