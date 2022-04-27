@@ -2,26 +2,41 @@ import './App.css';
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import {useState} from "react";
+import AddTask from "./components/AddTask";
 
 function App() {
     const [tasks, setTasks] = useState([
         {
             id: 1,
             name: 'Task 1',
-            text: 'Something about task 1',
+            description: 'Something about task 1',
             reminder: true
         }, {
             id: 2,
             name: 'Task 2',
-            text: 'Something about task 2',
+            description: 'Something about task 2',
             reminder: true
         }, {
             id: 3,
             name: 'Task 3',
-            text: 'Something about task 3',
+            description: 'Something about task 3',
             reminder: true
         }
     ])
+
+    const addTask = (task) => {
+        console.log('On Add', task)
+        // const keys = tasks.map((task) => task.id)
+        // const sortedKeys = keys.sort((a, b) => a - b)
+        // const maxKey = sortedKeys[sortedKeys.length-1]
+
+        const maxKey = tasks.map((task) => task.id)
+                            .sort((a, b) => a - b)[tasks.length-1]
+
+        const newTask = {id: maxKey+1, ...task,}
+
+        setTasks([...tasks, newTask])
+    }
 
     const deleteTask = (id) => {
         console.log('On Delete', id)
@@ -42,6 +57,7 @@ function App() {
   return (
     <div className="container">
       <Header title={'Task Tracker'}></Header>
+      <AddTask onAdd={addTask}></AddTask>
         {tasks.length > 0 ?
             <Tasks tasks={tasks}
                    onToggle={toggleReminder}
