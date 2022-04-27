@@ -70,11 +70,22 @@ function App() {
         setFormVisible(!formVisible)
     }
 
-    const toggleReminder = (id) => {
-        console.log('On Toggle', id)
+    const toggleReminder = async (taskItem) => {
+        console.log('On Toggle', taskItem)
+
+        const res = await fetch(`http://localhost:5000/tasks/${taskItem.id}`,
+            {method: 'PATCH',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({reminder: !taskItem.reminder})
+            })
+
+        setTasks([...tasks, await res.json()])
+
         setTasks(tasks.map(
             (task) =>
-                task.id === id ? {...task, reminder: !task.reminder} : task
+                task.id === taskItem.id ? {...task, reminder: !task.reminder} : task
         ))
     }
 
