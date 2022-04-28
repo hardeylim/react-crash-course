@@ -81,8 +81,6 @@ function App() {
                 body: JSON.stringify({reminder: !taskItem.reminder})
             })
 
-        setTasks([...tasks, await res.json()])
-
         setTasks(tasks.map(
             (task) =>
                 task.id === taskItem.id ? {...task, reminder: !task.reminder} : task
